@@ -1,22 +1,25 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { Link, useHistory } from "react-router-dom";
-import { GlobalContext } from "../context/GlobalState";
+import axios from 'axios';
 
 export const EditUser = (props) => {
     const [selectedUser, setSelectedUser] = useState({
         id: "",
         name: "",
     });
-    const { users, editUser } = useContext(GlobalContext);
     const history = useHistory();
     const currentUserId = props.match.params.id;
 
     useEffect(() => {
-        const userId = currentUserId;
-        const selectedUser = users.find((user) => user.id === userId);
-        setSelectedUser(selectedUser);
-    }, [currentUserId, users]);
+        const getUser = async () => {
+            const userId = currentUserId;
+            const res = await axios.get(`https://us-central1-fir-functions-api-961bb.cloudfunctions.net/user/${userId}`);
+            const user = res.data
+            setSelectedUser(user);
+        }
+        getUser()
+    }, [currentUserId]);
 
     const onChange = (e) => {
         setSelectedUser({
@@ -26,13 +29,17 @@ export const EditUser = (props) => {
         });
     };
 
-    const onSubmit = () => {
-        editUser(selectedUser);
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        const userId = currentUserId;
+        await axios.put(`https://us-central1-fir-functions-api-961bb.cloudfunctions.net/user/${userId}`,  selectedUser )
+        
         history.push("/");
     };
 
     return (
         <Form onSubmit={onSubmit}>
+            <h1>Edit User</h1>
             <FormGroup>
                 <Label>Name</Label>
                 <Input
@@ -56,3 +63,4 @@ export const EditUser = (props) => {
         </Form>
     );
 };
+

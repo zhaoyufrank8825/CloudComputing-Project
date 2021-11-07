@@ -1,10 +1,26 @@
-import React, { useContext } from "react";
-import { GlobalContext } from "../context/GlobalState";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ListGroup, ListGroupItem, Button } from "reactstrap";
+import axios from 'axios';
 
 export const UserList = () => {
-    const { users, removeUser } = useContext(GlobalContext);
+
+    const [users, setUsers] = useState([]);
+
+    useEffect( () => {
+        const getUsers = async () => {
+            const res = await axios.get(`https://us-central1-fir-functions-api-961bb.cloudfunctions.net/user`);
+            const users = res.data;
+            setUsers(users);
+        }
+    
+        getUsers()
+    }, [users]);
+
+    const removeUser = async (userId, e) => {
+        e.preventDefault();
+        await axios.delete(`https://us-central1-fir-functions-api-961bb.cloudfunctions.net/user/${userId}`)
+    }
 
     return (
         <ListGroup className="mt-4">
@@ -22,7 +38,7 @@ export const UserList = () => {
                                     Edit
                                 </Link>
                                 <Button
-                                    onClick={() => removeUser(user.id)}
+                                    onClick={(event) => removeUser(user.id, event)}
                                     color="danger"
                                 >
                                     Delete

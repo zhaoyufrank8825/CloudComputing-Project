@@ -1,29 +1,26 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { Link, useHistory } from "react-router-dom";
-import { GlobalContext } from "../context/GlobalState";
-import { v4 as uuid } from "uuid";
+import axios from 'axios';
 
 export const AddUser = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const { addUser } = useContext(GlobalContext);
     const history = useHistory();
-    // const onChange = (e) => {
-    //     setName(e.target.value);
-    // };
-    const onSubmit = () => {
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
         const newUser = {
-            id: uuid(),
             name,
             email,
         };
-        addUser(newUser);
+        await axios.post(`https://us-central1-fir-functions-api-961bb.cloudfunctions.net/user`,  newUser )
         history.push("/");
     };
 
     return (
         <Form onSubmit={onSubmit}>
+            <h1>Add New User</h1>
             <FormGroup>
                 <Label>Name</Label>
                 <Input
