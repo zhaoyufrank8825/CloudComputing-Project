@@ -3,11 +3,14 @@ import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 
+// Add user to the database, and redirect to the home page
 export const AddUser = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const history = useHistory();
 
+    // After getting all the input information, using RESTfull API post to save to the database.
+    // Redirect to the home page.
     const onSubmit = async (e) => {
         e.preventDefault();
         const newUser = {

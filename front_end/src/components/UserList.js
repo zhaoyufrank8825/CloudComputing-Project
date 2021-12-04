@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import { ListGroup, ListGroupItem, Button } from "reactstrap";
 import axios from 'axios';
 
+// List the user in the firestore database, through the axios API call,
+// We also do the remove function in here with the related user ID.
 export const UserList = () => {
 
     const [users, setUsers] = useState([]);
 
+    // list all the users get from database, when the users is changed, rerender the page.
     useEffect( () => {
         const getUsers = async () => {
             const res = await axios.get(`https://us-central1-fir-functions-api-961bb.cloudfunctions.net/user`);
@@ -17,6 +20,7 @@ export const UserList = () => {
         getUsers()
     }, [users]);
 
+    // Delete the user by sending the function to the backend.
     const removeUser = async (userId, e) => {
         e.preventDefault();
         await axios.delete(`https://us-central1-fir-functions-api-961bb.cloudfunctions.net/user/${userId}`)

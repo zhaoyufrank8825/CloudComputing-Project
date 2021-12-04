@@ -3,6 +3,10 @@ import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 
+
+// Edit user function, need to get the information from the database,
+// then update the information of a user, and then use put function to save to database.
+// After saving to database, redirect the page to home page.
 export const EditUser = (props) => {
     const [selectedUser, setSelectedUser] = useState({
         id: "",
@@ -11,6 +15,7 @@ export const EditUser = (props) => {
     const history = useHistory();
     const currentUserId = props.match.params.id;
 
+    // Get the user information by id from the database, and show in this page.
     useEffect(() => {
         const getUser = async () => {
             const userId = currentUserId;
@@ -21,6 +26,7 @@ export const EditUser = (props) => {
         getUser()
     }, [currentUserId]);
 
+    // Get the change information from the input
     const onChange = (e) => {
         setSelectedUser({
             ...selectedUser,
@@ -29,6 +35,8 @@ export const EditUser = (props) => {
         });
     };
 
+    // On click the submit button, send the data back to database, through a put function.
+    // And redirect the page to the home page.
     const onSubmit = async (e) => {
         e.preventDefault();
         const userId = currentUserId;
